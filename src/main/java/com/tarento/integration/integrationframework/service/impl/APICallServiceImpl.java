@@ -75,17 +75,40 @@ public class APICallServiceImpl implements APICallService {
                         return responseDTO;
                     });
         } else {
-            responseMono = client.method(httpMethod)
-                    .uri(url)
-                    .headers(httpHeaders -> httpHeaders.addAll(headers))
-                    .bodyValue(requestBody)
-                    .retrieve()
-                    .bodyToMono(JsonNode.class)
-                    .map(jsonNode -> {
-                        ResponseDTO responseDTO = new ResponseDTO();
-                        responseDTO.setResponseData(jsonNode);
-                        return responseDTO;
-                    });
+            if(externalApiIntegrationDTO.isFormData()){
+                MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+                String[] params = ((String) requestBody).split("&");
+                for (String param : params) {
+                    String[] kv = param.split("=");
+                    if (kv.length == 2) {
+                        formData.add(kv[0], kv[1]);
+                    }
+                }
+                responseMono = client.method(httpMethod)
+                        .uri(url)
+                        .headers(httpHeaders -> httpHeaders.addAll(headers))
+                        .body(BodyInserters.fromFormData(formData))
+                        .retrieve()
+                        .bodyToMono(JsonNode.class)
+                        .map(jsonNode -> {
+                            ResponseDTO responseDTO = new ResponseDTO();
+                            responseDTO.setResponseData(jsonNode);
+                            return responseDTO;
+                        });
+            }else{
+                responseMono = client.method(httpMethod)
+                        .uri(url)
+                        .headers(httpHeaders -> httpHeaders.addAll(headers))
+                        .bodyValue(requestBody)
+                        .retrieve()
+                        .bodyToMono(JsonNode.class)
+                        .map(jsonNode -> {
+                            ResponseDTO responseDTO = new ResponseDTO();
+                            responseDTO.setResponseData(jsonNode);
+                            return responseDTO;
+                        });
+            }
+
         }
         return responseMono
                 .doOnSuccess(responseDTO -> {

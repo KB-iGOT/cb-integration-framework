@@ -59,6 +59,9 @@ public class ExternalApiIntegrationDTO<T> {
     @JsonProperty("alwaysDataReadFromCache")
     private boolean alwaysDataReadFromCache;
 
+    @JsonProperty("isFormData")
+    private boolean isFormData;
+
     public enum OperationType{
         PEER_TO_PEER("PEER_TO_PEER"),
         FIRE_AND_FORGET("FIRE_AND_FORGET");
