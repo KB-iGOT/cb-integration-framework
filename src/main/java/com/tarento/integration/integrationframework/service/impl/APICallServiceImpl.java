@@ -26,6 +26,8 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
 import java.time.Duration;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -76,14 +78,8 @@ public class APICallServiceImpl implements APICallService {
                     });
         } else {
             if(externalApiIntegrationDTO.isFormData()){
-                MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-                String[] params = ((String) requestBody).split("&");
-                for (String param : params) {
-                    String[] kv = param.split("=");
-                    if (kv.length == 2) {
-                        formData.add(kv[0], kv[1]);
-                    }
-                }
+                Map<String, Object> requestBodyMap = (Map<String, Object>) requestBody;
+                MultiValueMap<String, String> formData = convertToStringMap(requestBodyMap);
                 responseMono = client.method(httpMethod)
                         .uri(url)
                         .headers(httpHeaders -> httpHeaders.addAll(headers))
@@ -138,6 +134,13 @@ public class APICallServiceImpl implements APICallService {
         MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
         multiValueMap.setAll(requestHeader);
         return multiValueMap;
+    }
+    public MultiValueMap<String, String> convertToStringMap(Map<String, Object> inputMap) {
+        MultiValueMap<String, String> stringMap = new LinkedMultiValueMap<>();
+        for (Map.Entry<String, Object> entry : inputMap.entrySet()) {
+            stringMap.put(entry.getKey(), Collections.singletonList(entry.getValue().toString()));
+        }
+        return stringMap;
     }
 
     public Mono<Boolean> saveToRedis(ExternalApiIntegrationDTO externalApiIntegrationDTO, String key, ResponseDTO responseDTO) {
