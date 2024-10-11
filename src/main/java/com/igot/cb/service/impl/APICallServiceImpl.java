@@ -1,5 +1,6 @@
 package com.igot.cb.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.igot.cb.exception.CustomException;
@@ -79,10 +80,17 @@ public class APICallServiceImpl implements APICallService {
                         .headers(httpHeaders -> httpHeaders.addAll(headers))
                         .body(BodyInserters.fromFormData(formData))
                         .retrieve()
-                        .bodyToMono(JsonNode.class)
-                        .map(jsonNode -> {
+                        .bodyToMono(String.class)
+                        .map(responseBody -> {
                             ResponseDTO responseDTO = new ResponseDTO();
-                            responseDTO.setResponseData(jsonNode);
+                            JsonNode jsonResponse;
+                            try {
+                                jsonResponse = objectMapper.readTree(responseBody);
+                                responseDTO.setResponseData(jsonResponse);
+                            } catch (JsonProcessingException e) {
+                                responseDTO.setResponseData(responseBody);
+                            }
+
                             return responseDTO;
                         });
             }else{
@@ -91,10 +99,17 @@ public class APICallServiceImpl implements APICallService {
                         .headers(httpHeaders -> httpHeaders.addAll(headers))
                         .bodyValue(requestBody)
                         .retrieve()
-                        .bodyToMono(JsonNode.class)
-                        .map(jsonNode -> {
+                        .bodyToMono(String.class)
+                        .map(responseBody -> {
                             ResponseDTO responseDTO = new ResponseDTO();
-                            responseDTO.setResponseData(jsonNode);
+                            JsonNode jsonResponse;
+                            try {
+                                jsonResponse = objectMapper.readTree(responseBody);
+                                responseDTO.setResponseData(jsonResponse);
+                            } catch (JsonProcessingException e) {
+                                responseDTO.setResponseData(responseBody);
+                            }
+
                             return responseDTO;
                         });
             }
