@@ -1,5 +1,6 @@
 FROM openjdk:17-slim
 
+# Install necessary dependencies
 RUN apt-get update \
     && apt-get install -y \
         curl \
