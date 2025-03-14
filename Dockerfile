@@ -1,5 +1,6 @@
-FROM openjdk:11
+FROM openjdk:17-slim
 
+# Install necessary dependencies
 RUN apt-get update \
     && apt-get install -y \
         curl \
@@ -9,7 +10,9 @@ RUN apt-get update \
         libxtst6 \
         xfonts-75dpi \
         xfonts-base \
-        xz-utils
+        xz-utils \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY cb-integration-framework-0.0.1-SNAPSHOT.jar /opt/
 #HEALTHCHECK --interval=30s --timeout=30s CMD curl --fail http://localhost:7001/actuator/health || exit 1
