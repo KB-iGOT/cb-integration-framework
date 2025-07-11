@@ -43,7 +43,7 @@ class JWTTokenGeneratorUtilTest {
     }
 
     @Test
-    void testGenerateToken_nullRequestBody() throws JsonProcessingException {
+    void testGenerateToken_nullRequestBody() {
         String token = tokenUtil.generateRedisJwtTokenKey(null, "http://test.com", "READ");
         assertNotNull(token);
     }
