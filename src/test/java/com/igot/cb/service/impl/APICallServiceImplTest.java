@@ -1,6 +1,5 @@
 package com.igot.cb.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.igot.cb.exception.CustomException;
 import com.igot.cb.model.ExternalApiIntegrationDTO;
 import com.igot.cb.model.ResponseDTO;
@@ -27,8 +26,6 @@ class APICallServiceImplTest {
     private ReactiveRedisOperations<String, ResponseDTO> cacheOps;
     private ReactiveValueOperations<String, ResponseDTO> valueOps;
     private JWTTokenGeneratorUtil tokenUtil;
-    private ObjectMapper mapper;
-
     private MockWebServer mockWebServer;
 
     @BeforeEach
@@ -39,7 +36,6 @@ class APICallServiceImplTest {
         cacheOps = mock(ReactiveRedisOperations.class);
         valueOps = mock(ReactiveValueOperations.class);
         tokenUtil = mock(JWTTokenGeneratorUtil.class);
-        mapper = new ObjectMapper();
 
         when(cacheOps.opsForValue()).thenReturn(valueOps);
         when(valueOps.set(anyString(), any(), any())).thenReturn(Mono.just(true));
