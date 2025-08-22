@@ -80,24 +80,6 @@ class APICallServiceImplTest {
                 .build();
     }
 
-//    @Test
-//    void testMakeExternalApiCall_GetSuccess() {
-//        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\"result\":\"success\"}"));
-//
-//        StepVerifier.create(service.makeExternalApiCall(dto(HttpMethod.GET)))
-//                .assertNext(response -> assertNotNull(response.getResponseData()))
-//                .verifyComplete();
-//    }
-
-//    @Test
-//    void testMakeExternalApiCall_DeleteSuccess() {
-//        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\"deleted\":true}"));
-//
-//        StepVerifier.create(service.makeExternalApiCall(dto(HttpMethod.DELETE)))
-//                .assertNext(response -> assertNotNull(response.getResponseData()))
-//                .verifyComplete();
-//    }
-
     @Test
     void testMakeExternalApiCall_PostWithJson() {
         mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\"created\":true}"));
