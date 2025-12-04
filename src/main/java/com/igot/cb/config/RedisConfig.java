@@ -22,7 +22,7 @@ public class RedisConfig {
     @Value("${spring.redis.port}")
     private int redisPort;
 
-    @Value("${spring.redis.database}")
+    @Value("${spring.redis.database:1}")
     private int redisDatabase;
 
     @Bean
